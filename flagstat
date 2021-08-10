@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+THREAD_COUNT=$(($(grep -c processor /proc/cpuinfo) * 8 / 10 ))
+SCRIPT_NAME=$(basename "$0")
+
+GSUTIL="gsutil"
+SAMBAMBA="$HOME/sambamba"
+
+LOCAL_BAM_PATH="$HOME/input.bam"
+LOCAL_BAI_PATH="${LOCAL_BAM_PATH}.bai"
+LOCAL_FLAGSTAT_PATH="$HOME/output.flagstat"
+
+main() {
+  info "Starting with ${SCRIPT_NAME}"
+
+  input=$1 && shift
+  output=$1 && shift
+
+  # sanity checks
+  [[ $# -eq 0 ]] || die "More arguments provided than can be used"
+  tool_exists_or_die "${GSUTIL}"
+  file_exists_or_die "${SAMTOOLS}"
+
+  info "Passed sanity checks"
+
+  info "Start downloading input bam"
+  "${GSUTIL}" -mq cp "${input}" "${LOCAL_BAM_PATH}" || die "Downloading bam file failed"
+  "${GSUTIL}" -mq cp "${input}.bai" "${LOCAL_BAI_PATH}" || die "Downloading bam index file failed"
+  info "Finished downloading input bam"
+
+  "${SAMBAMBA}" flagstat -t "${THREAD_COUNT}" "${LOCAL_BAM_PATH}" > "${LOCAL_FLAGSTAT_PATH}"
+
+  info "Start uploading output flagstat"
+  gsutil -m cp "${LOCAL_FLAGSTAT_PATH}" "${output}"
+  info "Finished uploading output flagstat"
+
+  info "Finished with ${SCRIPT_NAME}"
+}
+
+tool_exists_or_die() {
+  local tool=$1 && shift
+  [[ -n ${tool} ]] || die "Not enough arguments to ${FUNCNAME[0]}"
+  command -v "${tool}" >/dev/null 2>&1 || die "Tool '${tool}' not found"
+}
+
+file_exists_or_die() {
+  local file=$1 && shift
+  [[ -n ${file} ]] || die "Not enough arguments to ${FUNCNAME[0]}"
+  [[ -f "${file}" ]] || die "File '${file}' not found"
+}
+
+msg() {
+  local msg_type=$1 && shift
+  local msg_content=$* && shift
+  echo "[${msg_type}] $(date +'%y%m%d %T') - ${msg_content}"
+}
+
+die() {
+  msg "ERROR" "$@" >&2
+  exit 1
+}
+
+warn() {
+  msg "WARN" "$@" >&2
+}
+
+info() {
+  msg "INFO" "$@"
+}
+
+main "$@"
