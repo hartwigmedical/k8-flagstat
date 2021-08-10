@@ -19,7 +19,7 @@ main() {
   # sanity checks
   [[ $# -eq 0 ]] || die "More arguments provided than can be used"
   tool_exists_or_die "${GSUTIL}"
-  file_exists_or_die "${SAMTOOLS}"
+  file_exists_or_die "${SAMBAMBA}"
 
   info "Passed sanity checks"
 
