@@ -13,9 +13,4 @@ spec:
           image: DOCKER_IMAGE
           imagePullPolicy: Always
           args: ["INPUT", "OUTPUT"]
-          resources:
-            requests:
-              memory: "8Gi"
-            limits:
-              memory: "8Gi"
       restartPolicy: Never
