@@ -30,13 +30,13 @@ print_push_usage(){
 }
 
 print_run_usage(){
-  echo "Run samtools flagstat at GCP. "
+  echo "Run sambamba flagstat at GCP. "
   echo "USAGE: $0 run \ "
   echo "    --input <input-path> \ "
   echo "    --output <output-path> \ "
   echo "    --job-name <job-name> \ "
   echo "    --docker-image <docker-image>"
-  echo "  [-i/--input]                              (Required)    Path to the bam file on which samtools flagstat will be run,"
+  echo "  [-i/--input]                              (Required)    Path to the bam file on which sambamba flagstat will be run,"
   echo "                                                          e.g. gs://some-kind/of/path.bam"
   echo "                                                          Make sure that an index file is also available,"
   echo "                                                          e.g. gs://some-kind/of/path.bam.bai"
