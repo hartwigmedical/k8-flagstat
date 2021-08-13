@@ -31,7 +31,7 @@ main() {
   "${SAMBAMBA}" flagstat -t "${THREAD_COUNT}" "${LOCAL_BAM_PATH}" > "${LOCAL_FLAGSTAT_PATH}"
 
   info "Start uploading output flagstat"
-  gsutil -m cp "${LOCAL_FLAGSTAT_PATH}" "${output}"
+  "${GSUTIL}" -m cp "${LOCAL_FLAGSTAT_PATH}" "${output}"
   info "Finished uploading output flagstat"
 
   info "Finished with ${SCRIPT_NAME}"
