@@ -1,4 +1,6 @@
 # k8-flagstat
+Functionality is covered by more recent more flexible tool: [k8analysis](https://github.com/hartwigmedical/k8analysis).
+
 Run sambamba flagstat in kubernetes
 
 Note: k8-flagstat is not used in [pipeline5](https://github.com/hartwigmedical/pipeline5).
